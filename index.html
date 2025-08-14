@@ -61,7 +61,7 @@
       appearance:none; border:none; cursor:pointer;
       padding:12px 16px; border-radius:14px; font-weight:700; letter-spacing:.3px; color:#0b1020;
       background:linear-gradient(180deg, #a5f3fc, #22d3ee 70%);
-      box-shadow: 0 10px 18px rgba(34,211,238,.25), inset 0 1px 0 rgba(255,255,255,.6);
+      box-shadow: 0 10px 18px rgba(34,211,238,.25), inset 1px 1px 0 rgba(255,255,255,.6);
       transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
     }
     .btn:active{transform:translateY(1px)}
@@ -86,20 +86,92 @@
     footer{margin-top:16px; display:flex; justify-content:space-between; align-items:center; color:#9aa5b1; font-size:12px}
     a{color:#a5f3fc; text-decoration:none}
     a:hover{text-decoration:underline}
-      /* --- Mobile enhancements --- */
+
+    /* --- Mobile enhancements (kemas khas phone) --- */
     @media (max-width: 640px){
+      /* Layout asas */
       body{ overflow:auto; }
       .container{ padding:16px; }
       .card{ padding:16px; border-radius:16px; }
+
+      /* Saiz tajuk & subteks */
       h1{ font-size:22px; }
-      .sub{ font-size:13px; }
+      .sub{
+        font-size:14px;
+        line-height:1.7;
+        color:#dbe5ef;                 /* cerahkan subteks */
+      }
+
+      /* Bar atas */
       .row{ gap:8px; }
-      textarea{ min-height:34vh; max-height:50vh; padding:14px 14px 56px; font-size:16px; }
-      .actions{ flex-direction:column; align-items:stretch; gap:8px; }
-      .left{ justify-content:space-between; }
-      .right{ width:100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-      .btn{ width:100%; padding:14px 16px; }
-      footer{ flex-direction:column; align-items:flex-start; gap:8px; }
+      .date{ color:#e2e8f0; }          /* cerahkan tarikh */
+      .chip{ color:#e2e8f0; }          /* cerahkan chip */
+
+      /* Textarea */
+      textarea{
+        min-height:34vh;
+        max-height:50vh;
+        padding:14px 14px 56px;
+        font-size:16px;
+        background: rgba(2,6,23,.28);       /* sedikit lebih cerah */
+        border-color: rgba(148,163,184,.35);/* border lebih jelas */
+      }
+
+      /* Seksyen tindakan */
+      .actions{
+        flex-direction:column;
+        align-items:stretch;
+        gap:12px;
+      }
+
+      /* Kiri: switch + nota */
+      .left{
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+      }
+      .switch{ font-size:14px; color:#e2e8f0; } /* label switch lebih terang */
+      .meta{ font-size:12px; color:#d3dbe6; }   /* nota privasi lebih terang */
+
+      /* Kanan: counter + butang (konsisten & center) */
+      .right{
+        width:100%;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        grid-auto-rows:minmax(48px,auto);
+        gap:10px;
+        align-items:stretch;
+        justify-items:stretch;
+      }
+      .right .counter{
+        grid-column:1 / -1;           /* counter satu baris penuh di atas */
+        text-align:center;
+        font-size:13px;
+        color:#e2e8f0;                /* cerahkan counter */
+        opacity:.95;
+        padding:4px 0;
+      }
+
+      /* Butang: sama lebar/tinggi, rasa tap yang baik */
+      .btn{
+        width:100%;
+        padding:14px 18px;
+        justify-self:stretch;
+      }
+      .btn:active{ transform:translateY(1px) scale(.99); }
+
+      /* Footer: center & lebih terang */
+      footer{
+        flex-direction:column;
+        align-items:center;
+        gap:8px;
+        width:100%;
+        text-align:center;
+      }
+      footer span, footer a{ color:#dbe5ef; }
+
+      /* Toast ikut safe area */
       .toast{ inset:auto 0 calc(12px + env(safe-area-inset-bottom)); }
     }
 
