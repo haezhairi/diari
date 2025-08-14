@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diari Serahan</title>
+  <meta name="description" content="Tulis, serah, dan padam — seolah-olah dihantar kepada Tuhan. Tiada data disimpan." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✨</text></svg>">
+  <style>
+    :root{
+      --bg1:#0f172a; /* slate-900 */
+      --bg2:#1e293b; /* slate-800 */
+      --glass: rgba(255,255,255,.08);
+      --glass-border: rgba(255,255,255,.18);
+      --text: #e2e8f0; /* slate-200 */
+      --muted: #94a3b8; /* slate-400 */
+      --brand: #22d3ee; /* cyan-400 */
+      --brand-2:#a78bfa; /* violet-400 */
+      --ok:#34d399; /* green-400 */
+      --warn:#f59e0b; /* amber-500 */
+      --danger:#fb7185; /* rose-400 */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); font:500 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 15% 10%, #0ea5e9 0%, transparent 40%),
+                  radial-gradient(1000px 800px at 85% 15%, #a78bfa 0%, transparent 40%),
+                  radial-gradient(800px 600px at 50% 90%, #22d3ee 0%, transparent 45%),
+                  linear-gradient(160deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+    }
+    .stars{position:fixed;inset:0;pointer-events:none;opacity:.35}
+    .container{position:relative; min-height:100%; display:grid; place-items:center; padding:24px}
+    .card{
+      width:min(900px, 100%);
+      backdrop-filter: blur(14px) saturate(120%);
+      background: var(--glass);
+      border:1px solid var(--glass-border);
+      border-radius:24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+      padding: clamp(18px, 4vw, 28px);
+    }
+    h1{font-size:clamp(22px, 3.2vw, 32px); margin:0 0 6px; font-weight:700; letter-spacing:.3px}
+    .sub{color:var(--muted); font-size:clamp(12px,2.2vw,14px); margin-bottom:18px}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:12px}
+    .chip{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background: rgba(255,255,255,.06); border:1px solid var(--glass-border); color:#cbd5e1; font-size:13px}
+    .dot{width:8px; height:8px; border-radius:50%; background: linear-gradient(45deg, var(--brand), var(--brand-2)); box-shadow:0 0 10px var(--brand)}
+    .sep{flex:1}
+    .date{color:#cbd5e1; font-weight:600}
+    textarea{
+      width:100%; min-height: 220px; resize:vertical; max-height: 55vh; border-radius:18px; padding:18px 18px 50px; outline:none; color:var(--text);
+      background: rgba(2,6,23,.35); border:1px solid rgba(148,163,184,.25);
+      font:500 16px/1.7 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Arial;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    textarea:focus{box-shadow:0 0 0 2px rgba(34,211,238,.3), 0 6px 25px rgba(2,132,199,.2); border-color:rgba(34,211,238,.6)}
+    .actions{display:flex; gap:10px; align-items:center; justify-content:space-between; margin-top:12px}
+    .left, .right{display:flex; gap:10px; align-items:center}
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      padding:12px 16px; border-radius:14px; font-weight:700; letter-spacing:.3px; color:#0b1020;
+      background:linear-gradient(180deg, #a5f3fc, #22d3ee 70%);
+      box-shadow: 0 10px 18px rgba(34,211,238,.25), inset 0 1px 0 rgba(255,255,255,.6);
+      transition: transform .06s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:linear-gradient(180deg, #e9d5ff, #a78bfa 70%);}
+    .switch{display:inline-flex; align-items:center; gap:8px; color:#cbd5e1; font-size:13px}
+    .switch input{display:none}
+    .switch .track{width:44px; height:24px; background:#334155; border:1px solid var(--glass-border); border-radius:999px; position:relative; transition: background .2s}
+    .switch .thumb{position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:white; transition: left .18s ease}
+    .switch input:checked + .track{background:linear-gradient(90deg, var(--brand), var(--brand-2))}
+    .switch input:checked + .track .thumb{left:22px}
+    .meta{color:#94a3b8; font-size:12px}
+    .counter{color:#94a3b8; font-size:12px}
+    .toast{position:fixed; inset:auto 0 24px; display:grid; place-items:center; pointer-events:none}
+    .toast .msg{pointer-events:auto; background:rgba(2,6,23,.8); border:1px solid rgba(148,163,184,.35); padding:12px 14px; border-radius:12px; color:#cbd5e1; font-weight:600}
+    .success{color:#10b981}
+    .fadeUp{animation:fadeUp .7s ease forwards}
+    @keyframes fadeUp { from{opacity:0; transform: translateY(6px)} to{opacity:1; transform: translateY(0)} }
+    /* floating particles on send */
+    .particle{position:fixed; width:6px; height:6px; border-radius:50%; pointer-events:none; opacity:0;}
+    @keyframes lift { 0%{transform:translateY(0) scale(1); opacity:.9} 100%{transform:translateY(-120px) scale(.6); opacity:0} }
+    /* Footer */
+    footer{margin-top:16px; display:flex; justify-content:space-between; align-items:center; color:#9aa5b1; font-size:12px}
+    a{color:#a5f3fc; text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <canvas class="stars" id="stars"></canvas>
+  <div class="container">
+    <div class="card">
+      <div class="row">
+        <span class="chip"><span class="dot"></span> Diari Serahan</span>
+        <span class="sep"></span>
+        <span class="date" id="today"></span>
+      </div>
+      <h1>Taip, Serahkan & Tenang.</h1>
+      <div class="sub">Tulis apa sahaja dari hati. Tekan <strong>Hantar</strong> — kandungan akan <em>lenyap</em> (tidak disimpan). Anggaplah ia telah sampai kepada-Nya.</div>
+
+      <textarea id="entry" placeholder="Tulis di sini… (Ctrl + Enter untuk Hantar)"></textarea>
+
+      <div class="actions">
+        <div class="left">
+          <label class="switch" title="Mod Malam/Redup (kurang silau)">
+            <input type="checkbox" id="dimToggle"/>
+            <span class="track"><span class="thumb"></span></span>
+            <span>Mod Redup</span>
+          </label>
+          <span class="meta" id="tip">Tiada data disimpan. Semuanya kekal di peranti kau sahaja.</span>
+        </div>
+        <div class="right">
+          <span class="counter" id="counter">0 aksara</span>
+          <button class="btn secondary" id="clearBtn" title="Padam ruangan">Padam</button>
+          <button class="btn" id="sendBtn" title="Serahkan dan padam">Hantar</button>
+        </div>
+      </div>
+
+      <footer>
+        <span>“Sesungguhnya dengan mengingati Allah hati menjadi tenang.”</span>
+        <span><a href="#" id="about">Tentang privasi</a></span>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite" aria-atomic="true" style="display:none">
+    <div class="msg fadeUp" id="toastMsg">Diserahkan. Aman. <span class="success">✔</span></div>
+  </div>
+
+  <script>
+    // Date
+    const today = new Date();
+    const fmt = new Intl.DateTimeFormat('ms-MY', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    document.getElementById('today').textContent = fmt.format(today);
+
+    // Elements
+    const entry = document.getElementById('entry');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const counter = document.getElementById('counter');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+    const dimToggle = document.getElementById('dimToggle');
+
+    // Character counter
+    function updateCounter(){
+      const n = entry.value.length;
+      counter.textContent = n + ' aksara';
+    }
+    entry.addEventListener('input', updateCounter);
+    updateCounter();
+
+    // Dim mode
+    dimToggle.addEventListener('change', (e)=>{
+      document.body.style.filter = e.target.checked ? 'brightness(.9) contrast(.98)' : 'none';
+    });
+
+    // About/privacy
+    document.getElementById('about').addEventListener('click', (e)=>{
+      e.preventDefault();
+      alert('Privasi: Laman ini tidak menghantar atau menyimpan sebarang data ke mana-mana pelayan. Semua yang kau tulis hanya berada dalam memori pelayar. Apabila kau tekan Hantar atau Padam, teks dipadamkan serta-merta.');
+    });
+
+    // Toast helper
+    let toastTimer;
+    function showToast(text){
+      toastMsg.innerHTML = text;
+      toast.style.display='grid';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toast.style.display='none', 2300);
+    }
+
+    // Create floating particles on send
+    function burst(x,y){
+      const colors = ['#a5f3fc','#22d3ee','#a78bfa','#e9d5ff','#f8fafc'];
+      const total = 22;
+      for(let i=0;i<total;i++){
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = (x + (Math.random()*60-30)) + 'px';
+        p.style.top = (y + (Math.random()*14-7)) + 'px';
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        p.style.boxShadow = '0 0 16px rgba(255,255,255,.35)';
+        p.style.animation = `lift ${600 + Math.random()*600}ms ease-out forwards`;
+        document.body.appendChild(p);
+        setTimeout(()=> p.remove(), 800);
+      }
+    }
+
+    // Send (burn-after-reading)
+    let locking = false;
+    async function send(){
+      if(locking) return;
+      const text = entry.value.trim();
+      if(!text){ showToast('Tiada apa untuk diserahkan.'); return; }
+      locking = true; sendBtn.disabled = true; clearBtn.disabled = true;
+
+      // Visual: scramble-before-vanish
+      await scrambleThenClear(entry, 380);
+
+      // Burst effect near the send button
+      const rect = sendBtn.getBoundingClientRect();
+      burst(rect.left + rect.width/2, rect.top + rect.height/2);
+
+      showToast('Diserahkan. Tenang & lepaskan. <span class="success">✔</span>');
+
+      // Ensure memory cleared
+      entry.value = '';
+      updateCounter();
+
+      setTimeout(()=>{ locking=false; sendBtn.disabled=false; clearBtn.disabled=false; }, 600);
+    }
+
+    async function scrambleThenClear(el, ms){
+      const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789!@#$%&*+';
+      const original = el.value;
+      const duration = ms; const steps = 14; const delay = duration/steps;
+      for(let i=0;i<steps;i++){
+        const slice = Math.floor(original.length * (1 - i/steps));
+        const rand = Array.from({length: slice}, ()=> chars[Math.floor(Math.random()*chars.length)]).join('');
+        el.value = rand; await new Promise(r=>setTimeout(r, delay));
+      }
+      el.value = '';
+    }
+
+    // Clear button
+    clearBtn.addEventListener('click', ()=>{ entry.value=''; updateCounter(); showToast('Dibersihkan.'); });
+
+    // Send events
+    sendBtn.addEventListener('click', send);
+    entry.addEventListener('keydown', (e)=>{
+      if(e.key==='Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault(); send();
+      }
+    });
+
+    // Decorative starfield
+    const cvs = document.getElementById('stars');
+    const ctx = cvs.getContext('2d');
+    let w,h,particles;
+    function resize(){ w = cvs.width = innerWidth; h = cvs.height = innerHeight; initStars(); }
+    function initStars(){
+      const count = Math.min(160, Math.floor(w*h/15000));
+      particles = Array.from({length:count}, ()=>({
+        x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.2 + .3, s: Math.random()*0.6 + 0.2
+      }));
+    }
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      for(const p of particles){
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(226,232,240,${0.35 + Math.random()*0.3})`; ctx.fill();
+        p.y += p.s * 0.15; if(p.y>h) p.y = -2;
+      }
+      requestAnimationFrame(draw);
+    }
+    addEventListener('resize', resize); resize(); draw();
+  </script>
+</body>
+</html>
