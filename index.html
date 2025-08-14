@@ -86,6 +86,26 @@
     footer{margin-top:16px; display:flex; justify-content:space-between; align-items:center; color:#9aa5b1; font-size:12px}
     a{color:#a5f3fc; text-decoration:none}
     a:hover{text-decoration:underline}
+      /* --- Mobile enhancements --- */
+    @media (max-width: 640px){
+      body{ overflow:auto; }
+      .container{ padding:16px; }
+      .card{ padding:16px; border-radius:16px; }
+      h1{ font-size:22px; }
+      .sub{ font-size:13px; }
+      .row{ gap:8px; }
+      textarea{ min-height:34vh; max-height:50vh; padding:14px 14px 56px; font-size:16px; }
+      .actions{ flex-direction:column; align-items:stretch; gap:8px; }
+      .left{ justify-content:space-between; }
+      .right{ width:100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+      .btn{ width:100%; padding:14px 16px; }
+      footer{ flex-direction:column; align-items:flex-start; gap:8px; }
+      .toast{ inset:auto 0 calc(12px + env(safe-area-inset-bottom)); }
+    }
+
+    /* Respect safe area on iOS */
+    .container{ padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+    *{ -webkit-tap-highlight-color: transparent; }
   </style>
 </head>
 <body>
